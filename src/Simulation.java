@@ -1,3 +1,4 @@
+import entity.Coordinate;
 import worldmap.WorldMap;
 import worldmap.WorldMapRenderer;
 
@@ -9,13 +10,14 @@ public class Simulation {
     private final WorldMapRenderer mapRenderer = new WorldMapRenderer(worldMap);
 
     public void nextTurn() {
-        /*
-         render map
-         do certain action
-        */
+
+        // render map
+        mapRenderer.printMap();
+        // do certain action
     }
 
     public void start() {
+        nextTurn();
         /*
         while (true)
            nextTurn

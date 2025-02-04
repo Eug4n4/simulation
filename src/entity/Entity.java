@@ -1,11 +1,11 @@
 package entity;
 
 abstract public class Entity {
-    private int x;
-    private int y;
+    private Coordinate coordinate;
+    private final Sprite sprite;
 
-    public Entity(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Entity(int x, int y, Sprite sprite) {
+        coordinate = new Coordinate(x, y);
+        this.sprite = sprite;
     }
 }
