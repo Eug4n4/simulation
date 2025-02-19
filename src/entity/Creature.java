@@ -4,8 +4,8 @@ abstract public class Creature extends Entity {
     private int speed;
     private int health;
 
-    public Creature(int x, int y, int speed, int health, Sprite sprite) {
-        super(x, y, sprite);
+
+    public Creature(int speed, int health) {
         this.speed = speed;
         this.health = health;
     }

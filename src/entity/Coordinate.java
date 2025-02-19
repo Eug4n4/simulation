@@ -1,5 +1,6 @@
 package entity;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Coordinate {
@@ -30,5 +31,17 @@ public class Coordinate {
     public static Coordinate getRandomCoordinate(int maxX, int maxY) {
         Random random = new Random();
         return new Coordinate(random.nextInt(maxX), random.nextInt(maxY));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

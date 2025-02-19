@@ -25,7 +25,7 @@ public class Simulation {
     }
 
     public void start() {
-        Entity herbivore = new Herbivore(5,4,1, 2, Sprite.HERBIVORE);
+        Entity herbivore = new Herbivore(1, 2);
         addInitAction(new SpawnEntityAction(herbivore, Coordinate.getRandomCoordinate(WIDTH, HEIGHT), worldMap));
         executeInitActions();
         nextTurn();

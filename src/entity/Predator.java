@@ -3,8 +3,8 @@ package entity;
 public class Predator extends Creature {
     int force;
 
-    public Predator(int x, int y, int speed, int health, int force, Sprite sprite) {
-        super(x, y, speed, health, sprite);
+    public Predator(int speed, int health, int force) {
+        super(speed, health);
         this.force = force;
     }
 

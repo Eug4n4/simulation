@@ -1,15 +1,14 @@
 package worldmap;
 
+
 import entity.Entity;
 import entity.Sprite;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 public class WorldMapRenderer {
     private final WorldMap worldMap;
-//    private List<List<Sprite>> spritesMap = new ArrayList<>();
-//    private List<Sprite> spritesMap = new ArrayList<>();
+
     public WorldMapRenderer(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
@@ -18,7 +17,13 @@ public class WorldMapRenderer {
         for (int i = 0; i < worldMap.getHeight(); i++) {
 
             for (int j = 0; j < worldMap.getWidth(); j++) {
-                System.out.print(Character.toString(worldMap.getSpriteFromCell(i, j).getCodePoint()));
+                Optional<Entity> entityToPrint = worldMap.getEntityFromCell(i, j);
+
+                entityToPrint.ifPresentOrElse(entity ->
+                        System.out.print(Character.toString(Sprite.getSpriteFromEntity(entity).getCodePoint())),
+                        () -> System.out.print(Character.toString(Sprite.CELL.getCodePoint()))
+                );
+
             }
             System.out.println();
         }

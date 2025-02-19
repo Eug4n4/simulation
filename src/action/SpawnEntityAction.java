@@ -15,9 +15,12 @@ public class SpawnEntityAction extends Action {
         this.worldMap = worldMap;
     }
 
+    private void spawnEntity() {
+        worldMap.putEntity(entity, coordinate);
+    }
 
     @Override
     public void execute() {
-
+        spawnEntity();
     }
 }
