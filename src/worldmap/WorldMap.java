@@ -2,6 +2,9 @@ package worldmap;
 
 import entity.Coordinate;
 import entity.Entity;
+import entity.Sprite;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class WorldMap {
@@ -12,6 +15,7 @@ public class WorldMap {
     public WorldMap(int width, int height) {
         this.width = width;
         this.height = height;
+        occupiedCells = new HashMap<>();
     }
 
     public int getWidth() {
@@ -22,8 +26,13 @@ public class WorldMap {
         return height;
     }
 
-    public Map<Coordinate, Entity> getOccupiedCells() {
-        return occupiedCells;
+    public final Sprite getSpriteFromCell(int row, int column) {
+        Coordinate coordinate = new Coordinate(row, column);
+
+        if (occupiedCells.containsKey(coordinate)) {
+            return occupiedCells.get(coordinate).getSprite();
+        }
+        return Sprite.CELL;
     }
 
 

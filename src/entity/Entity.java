@@ -8,4 +8,8 @@ abstract public class Entity {
         coordinate = new Coordinate(x, y);
         this.sprite = sprite;
     }
+
+    public Sprite getSprite() {
+        return sprite;
+    }
 }
