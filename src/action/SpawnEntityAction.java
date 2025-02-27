@@ -5,9 +5,9 @@ import entity.Entity;
 import worldmap.WorldMap;
 
 public class SpawnEntityAction extends Action {
-    Entity entity;
-    Coordinate coordinate;
-    WorldMap worldMap;
+    private final Entity entity;
+    private final Coordinate coordinate;
+    private final WorldMap worldMap;
 
     public SpawnEntityAction(Entity entity, Coordinate coordinate, WorldMap worldMap) {
         this.entity = entity;

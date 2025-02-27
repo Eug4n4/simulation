@@ -10,12 +10,11 @@ import java.util.Optional;
 public class WorldMap {
     private final int width;
     private final int height;
-    private Map<Coordinate, Entity> occupiedCells;
+    private Map<Coordinate, Entity> occupiedCells = new HashMap<>();
 
     public WorldMap(int width, int height) {
         this.width = width;
         this.height = height;
-        occupiedCells = new HashMap<>();
     }
 
     public int getWidth() {
@@ -26,14 +25,21 @@ public class WorldMap {
         return height;
     }
 
+
+    public boolean isEmptyCell(Coordinate coordinate) {
+        return !occupiedCells.containsKey(coordinate);
+    }
+
     public void putEntity(Entity entity, Coordinate coordinate) {
-        occupiedCells.put(coordinate, entity);
+        if (isEmptyCell(coordinate)) {
+            occupiedCells.put(coordinate, entity);
+        }
     }
 
     public final Optional<Entity> getEntityFromCell(int row, int column) {
         Coordinate coordinate = new Coordinate(row, column);
 
-        if (occupiedCells.containsKey(coordinate)) {
+        if (!isEmptyCell(coordinate)) {
             return Optional.of(occupiedCells.get(coordinate));
         }
         return Optional.empty();

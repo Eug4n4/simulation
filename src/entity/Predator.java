@@ -1,7 +1,7 @@
 package entity;
 
 public class Predator extends Creature {
-    int force;
+    private int force;
 
     public Predator(int speed, int health, int force) {
         super(speed, health);
