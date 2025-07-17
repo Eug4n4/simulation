@@ -1,67 +1,67 @@
 package entity;
 
 public class EntityCounter {
-    private final int max_herbivores;
-    private final int max_predators;
-    private final int max_eat;
-    private final int max_obstacles;
-    private int current_herbivores;
-    private int current_predators;
-    private int current_eat;
-    private int current_obstacles;
+    private final int maxHerbivores;
+    private final int maxPredators;
+    private final int maxFood;
+    private final int maxObstacles;
+    private int currentHerbivores;
+    private int currentPredators;
+    private int currentFood;
+    private int currentObstacles;
 
-    public EntityCounter(int max_herbivores, int max_predators, int max_eat, int max_obstacles) {
-        this.max_herbivores = max_herbivores;
-        this.max_predators = max_predators;
-        this.max_eat = max_eat;
-        this.max_obstacles = max_obstacles;
+    public EntityCounter(int max_herbivores, int max_predators, int max_food, int max_obstacles) {
+        this.maxHerbivores = max_herbivores;
+        this.maxPredators = max_predators;
+        this.maxFood = max_food;
+        this.maxObstacles = max_obstacles;
     }
 
     public int getMaxHerbivores() {
-        return max_herbivores;
+        return maxHerbivores;
     }
 
     public int getMaxPredators() {
-        return max_predators;
+        return maxPredators;
     }
 
-    public int getMaxEat() {
-        return max_eat;
+    public int getMaxFood() {
+        return maxFood;
     }
 
     public int getMaxObstacles() {
-        return max_obstacles;
+        return maxObstacles;
     }
 
     public int getCurrentHerbivores() {
-        return current_herbivores;
+        return currentHerbivores;
     }
 
     public int getCurrentPredators() {
-        return current_predators;
+        return currentPredators;
     }
 
-    public int getCurrentEat() {
-        return current_eat;
+    public int getCurrentFood() {
+        return currentFood;
     }
 
     public int getCurrentObstacles() {
-        return current_obstacles;
+        return currentObstacles;
     }
 
     public void incrementHerbivoresCount() {
-        current_herbivores++;
+        currentHerbivores++;
     }
 
     public void incrementPredatorsCount() {
-        current_predators++;
+        currentPredators++;
     }
 
-    public void incrementEatCount() {
-        current_eat++;
+    public void incrementFoodCount() {
+        currentFood++;
     }
 
     public void incrementObstaclesCount() {
-        current_obstacles++;
+        currentObstacles++;
     }
 }

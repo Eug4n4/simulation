@@ -15,10 +15,10 @@ public enum Sprite {
 
     public static Sprite getSpriteFromEntity(Entity entity) {
         return switch (entity) {
-            case Herbivore _ -> HERBIVORE;
-            case Predator _ -> PREDATOR;
-            case Grass _ -> GRASS;
-            case Palm _ -> PALM;
+            case Herbivore herbivore -> HERBIVORE;
+            case Predator predator -> PREDATOR;
+            case Grass grass -> GRASS;
+            case Palm palm -> PALM;
             case null, default -> CELL;
         };
     }

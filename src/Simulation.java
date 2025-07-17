@@ -38,9 +38,9 @@ public class Simulation {
             addInitAction(createSpawnEntityAction(new Predator(1, 2, 2)));
             entityCounter.incrementPredatorsCount();
         }
-        while (entityCounter.getCurrentEat() < entityCounter.getMaxEat()) {
+        while (entityCounter.getCurrentFood() < entityCounter.getMaxFood()) {
             addInitAction(createSpawnEntityAction(new Grass()));
-            entityCounter.incrementEatCount();
+            entityCounter.incrementFoodCount();
         }
         while (entityCounter.getCurrentObstacles() < entityCounter.getMaxObstacles()) {
             addInitAction(createSpawnEntityAction(new Palm()));

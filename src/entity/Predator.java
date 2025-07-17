@@ -8,7 +8,7 @@ public class Predator extends Creature {
         this.force = force;
     }
 
-    void attack() {
+    public void attack() {
 
     }
 }
