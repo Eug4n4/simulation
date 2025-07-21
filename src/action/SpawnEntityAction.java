@@ -4,7 +4,7 @@ import entity.Coordinate;
 import entity.Entity;
 import worldmap.WorldMap;
 
-public class SpawnEntityAction extends Action {
+public class SpawnEntityAction implements Action {
     private final Entity entity;
     private final Coordinate coordinate;
     private final WorldMap worldMap;

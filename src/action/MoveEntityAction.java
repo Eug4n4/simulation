@@ -1,6 +1,6 @@
 package action;
 
-public class MoveEntityAction extends Action {
+public class MoveEntityAction implements Action {
 
     public MoveEntityAction() {
 
