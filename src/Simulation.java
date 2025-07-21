@@ -1,6 +1,7 @@
 import action.Action;
 import action.SpawnEntityAction;
 import entity.*;
+import worldmap.Pathfinder;
 import worldmap.WorldMap;
 import worldmap.WorldMapRenderer;
 
@@ -13,11 +14,13 @@ public class Simulation {
     private WorldMap worldMap;
     private final WorldMapRenderer mapRenderer;
     private final EntityCounter entityCounter;
+    private final Pathfinder pathfinder;
 
     public Simulation(WorldMap worldMap) {
         this.worldMap = worldMap;
         mapRenderer = new WorldMapRenderer(worldMap);
         entityCounter = new EntityCounter(5, 5, 3, 2);
+        pathfinder = new Pathfinder(worldMap);
     }
 
 
@@ -59,6 +62,12 @@ public class Simulation {
         fillInitActions();
         executeInitActions();
         nextTurn();
+        Herbivore h = new Herbivore(1, 2);
+        worldMap.putEntity(h, Coordinate.getRandomCoordinate(worldMap.getWidth(), worldMap.getHeight()));
+        List<Coordinate> result = pathfinder.findFood(worldMap.getEntityCoordinate(h).orElse(new Coordinate(0, 0)), e -> e instanceof Grass);
+        System.out.println();
+        mapRenderer.printMap();
+        System.out.println(result);
         /*
         while (true)
            nextTurn

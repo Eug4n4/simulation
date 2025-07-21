@@ -1,6 +1,7 @@
 package worldmap;
 
 
+import entity.Coordinate;
 import entity.Entity;
 import entity.Sprite;
 
@@ -17,7 +18,7 @@ public class WorldMapRenderer {
         for (int i = 0; i < worldMap.getHeight(); i++) {
 
             for (int j = 0; j < worldMap.getWidth(); j++) {
-                Optional<Entity> entityToPrint = worldMap.getEntityFromCell(i, j);
+                Optional<Entity> entityToPrint = worldMap.getEntityFromCell(new Coordinate(i, j));
 
                 entityToPrint.ifPresentOrElse(entity ->
                         System.out.print(Character.toString(Sprite.getSpriteFromEntity(entity).getCodePoint())),
