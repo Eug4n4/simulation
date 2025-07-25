@@ -1,4 +1,5 @@
 import action.Action;
+import action.MoveEntityAction;
 import action.SpawnEntityAction;
 import entity.*;
 import worldmap.Pathfinder;
@@ -19,11 +20,18 @@ public class Simulation {
     public Simulation(WorldMap worldMap) {
         this.worldMap = worldMap;
         mapRenderer = new WorldMapRenderer(worldMap);
-        entityCounter = new EntityCounter(5, 5, 3, 2);
+        entityCounter = new EntityCounter(5, 5, 3, 5);
         pathfinder = new Pathfinder(worldMap);
     }
 
 
+    private SpawnEntityAction createSpawnEntityAction(Entity entity, Coordinate coordinate) {
+        return new SpawnEntityAction(
+                entity,
+                coordinate,
+                worldMap
+        );
+    }
     private SpawnEntityAction createSpawnEntityAction(Entity entity) {
         return new SpawnEntityAction(
                 entity,
@@ -34,11 +42,13 @@ public class Simulation {
 
     private void fillInitActions() {
         while (entityCounter.getCurrentHerbivores() < entityCounter.getMaxHerbivores()) {
-            addInitAction(createSpawnEntityAction(new Herbivore(1, 2)));
+            Creature herbivore = new Herbivore(1, 2, Coordinate.getRandomCoordinate(worldMap.getWidth(), worldMap.getHeight()));
+            addInitAction(createSpawnEntityAction(herbivore, herbivore.getCoordinate()));
             entityCounter.incrementHerbivoresCount();
         }
         while (entityCounter.getCurrentPredators() < entityCounter.getMaxPredators()) {
-            addInitAction(createSpawnEntityAction(new Predator(1, 2, 2)));
+            Creature predator = new Predator(1, 2, 2, Coordinate.getRandomCoordinate(worldMap.getWidth(), worldMap.getHeight()));
+            addInitAction(createSpawnEntityAction(predator, predator.getCoordinate()));
             entityCounter.incrementPredatorsCount();
         }
         while (entityCounter.getCurrentFood() < entityCounter.getMaxFood()) {
@@ -52,8 +62,14 @@ public class Simulation {
 
     }
 
+
+
     private void nextTurn() {
-        // executeTurnActions()
+        mapRenderer.printMap();
+        System.out.println();
+        Action move = new MoveEntityAction(worldMap, pathfinder);
+        addTurnAction(move);
+        executeTurnActions();
         // render map
         mapRenderer.printMap();
     }
@@ -62,12 +78,12 @@ public class Simulation {
         fillInitActions();
         executeInitActions();
         nextTurn();
-        Herbivore h = new Herbivore(1, 2);
-        worldMap.putEntity(h, Coordinate.getRandomCoordinate(worldMap.getWidth(), worldMap.getHeight()));
-        List<Coordinate> result = pathfinder.findFood(worldMap.getEntityCoordinate(h).orElse(new Coordinate(0, 0)), e -> e instanceof Grass);
-        System.out.println();
-        mapRenderer.printMap();
-        System.out.println(result);
+//        Herbivore h = new Herbivore(1, 2, Coordinate.getRandomCoordinate(worldMap.getWidth(), worldMap.getHeight()));
+//        worldMap.putEntity(h, h.getCoordinate());
+//        List<Coordinate> result = pathfinder.findFood(h.getCoordinate(), e -> e instanceof Grass);
+//        System.out.println();
+//        mapRenderer.printMap();
+//        System.out.println(result);
         /*
         while (true)
            nextTurn
@@ -89,6 +105,12 @@ public class Simulation {
 
     private void executeInitActions() {
         for (Action action : initActions) {
+            action.execute();
+        }
+    }
+
+    private void executeTurnActions() {
+        for (Action action : turnActions) {
             action.execute();
         }
     }

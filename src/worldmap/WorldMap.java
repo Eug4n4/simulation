@@ -1,12 +1,10 @@
 package worldmap;
 
 import entity.Coordinate;
+import entity.Creature;
 import entity.Entity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +37,15 @@ public class WorldMap {
         }
     }
 
+    public void updateEntity(Entity entity, Coordinate coordinate) {
+        occupiedCells.put(coordinate, entity);
+
+    }
+
+    public void removeEntityAt(Coordinate coordinate) {
+        occupiedCells.remove(coordinate);
+    }
+
     public List<Coordinate> getAdjacentCoordinates(Coordinate coordinate) {
         int row = coordinate.getX();
         int column = coordinate.getY();
@@ -68,6 +75,13 @@ public class WorldMap {
                 .stream()
                 .filter(coordinate -> occupiedCells.get(coordinate).equals(entity))
                 .findFirst();
+    }
+
+    public List<Creature> getCreatures() {
+        return occupiedCells.values()
+                .stream()
+                .filter(e -> e instanceof Creature)
+                .collect(ArrayList::new, (list, entity) -> list.add((Creature)entity), List::addAll);
     }
 
 

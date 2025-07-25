@@ -54,7 +54,7 @@ public class Pathfinder {
         return result;
     }
 
-    private List<Coordinate> findFood(TreeNode root, Predicate<Entity> cellType) {
+    private List<Coordinate> findFood(TreeNode root, Predicate<Entity> foodType) {
         Queue<TreeNode> toBeVisited = new ArrayDeque<>();
         List<Coordinate> result = new ArrayList<>();
         Set<TreeNode> visitedCells = new HashSet<>();
@@ -63,7 +63,7 @@ public class Pathfinder {
             TreeNode current = toBeVisited.poll();
             visitedCells.add(current);
             Optional<Entity> entity = worldMap.getEntityFromCell(current.coordinate);
-            if (isFoodReached(entity.orElse(null), cellType)) {
+            if (isFoodReached(entity.orElse(null), foodType)) {
                 result = restorePath(current);
                 break;
             }
@@ -73,7 +73,7 @@ public class Pathfinder {
                 if (
                         !toBeVisited.contains(neighbour) &&
                         !visitedCells.contains(neighbour) &&
-                        (worldMap.isEmptyCell(coordinate) || isFoodReached(worldMap.getEntityFromCell(coordinate).orElse(null), cellType))
+                        (worldMap.isEmptyCell(coordinate) || isFoodReached(worldMap.getEntityFromCell(coordinate).orElse(null), foodType))
                 ) {
                     toBeVisited.add(neighbour);
                 }
@@ -83,8 +83,8 @@ public class Pathfinder {
         return result;
     }
 
-    public List<Coordinate> findFood(Coordinate start, Predicate<Entity> cellType) {
+    public List<Coordinate> findFood(Coordinate start, Predicate<Entity> foodType) {
         TreeNode root = new TreeNode(start);
-        return findFood(root, cellType);
+        return findFood(root, foodType);
     }
 }
