@@ -19,8 +19,8 @@ public class Main {
         WorldMap worldMap = new WorldMap(10, 12);
         Pathfinder pathfinder = new Pathfinder(worldMap);
         Action[] spawnActions = {
-                new SpawnEntityAction(new Herbivore(1, 2), new Coordinate(6,7), worldMap),
-                new SpawnEntityAction(new Predator(1, 2, 3), new Coordinate(0, 8), worldMap),
+                new SpawnEntityAction(new Herbivore(1, 2), Coordinate.getRandomCoordinate(worldMap.getHeight(), worldMap.getWidth()), worldMap),
+                new SpawnEntityAction(new Predator(2, 2, 3), Coordinate.getRandomCoordinate(worldMap.getHeight(), worldMap.getWidth()), worldMap),
                 new SpawnEntityAction(new Palm(), new Coordinate(1, 9), worldMap),
 
         };

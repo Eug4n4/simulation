@@ -36,7 +36,7 @@ public class WorldMap {
         if (isEmptyCell(coordinate) && isInMapRange(coordinate)) {
             occupiedCells.put(coordinate, entity);
         } else {
-            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate x = %d y = %d", coordinate.getX(), coordinate.getY()));
+            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate row = %d column = %d", coordinate.row(), coordinate.column()));
         }
     }
 
@@ -45,8 +45,8 @@ public class WorldMap {
     }
 
     public List<Coordinate> getAdjacentCoordinates(Coordinate coordinate) {
-        int row = coordinate.getX();
-        int column = coordinate.getY();
+        int row = coordinate.row();
+        int column = coordinate.column();
         return Stream.of(new Coordinate(row - 1, column - 1),
                         new Coordinate(row - 1, column),
                         new Coordinate(row - 1, column + 1),
@@ -83,7 +83,7 @@ public class WorldMap {
     }
 
     private boolean isInMapRange(Coordinate coordinate) {
-        return (coordinate.getX() > -1 && coordinate.getX() < height) && (coordinate.getY() > -1 && coordinate.getY() < width);
+        return (coordinate.row() > -1 && coordinate.row() < height) && (coordinate.column() > -1 && coordinate.column() < width);
     }
 
 
