@@ -8,25 +8,15 @@ import java.util.List;
 abstract public class Creature extends Entity {
     private final int speed;
     private int health;
-    private Coordinate coordinate;
     private List<Coordinate> routeToFood;
 
 
-    public Creature(int speed, int health, Coordinate coordinate) {
+    public Creature(int speed, int health) {
         this.speed = speed;
         this.health = health;
-        this.coordinate = coordinate;
     }
 
     public abstract void makeMove(Pathfinder pathfinder, WorldMap worldMap);
-
-    public Coordinate getCoordinate() {
-        return coordinate;
-    }
-
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
-    }
 
     public List<Coordinate> getRouteToFood() {
         return routeToFood;

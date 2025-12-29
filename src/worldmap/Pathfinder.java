@@ -13,7 +13,7 @@ public class Pathfinder {
         this.worldMap = worldMap;
     }
 
-    private class TreeNode {
+    private static class TreeNode {
         TreeNode parent;
         Coordinate coordinate;
 

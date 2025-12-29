@@ -9,10 +9,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Predator extends Creature {
-    private int force;
+    private final int force;
 
-    public Predator(int speed, int health, int force, Coordinate coordinate) {
-        super(speed, health, coordinate);
+    public Predator(int speed, int health, int force) {
+        super(speed, health);
         this.force = force;
     }
 
@@ -24,40 +24,35 @@ public class Predator extends Creature {
     public void makeMove(Pathfinder pathfinder, WorldMap worldMap) {
         List<Coordinate> routeToFood = getRouteToFood();
         Predicate<Entity> foodType = e -> e instanceof Herbivore;
+        Coordinate myCoordinate = worldMap.getEntityCoordinate(this);
         if (routeToFood == null || routeToFood.isEmpty()) {
-            setRouteToFood(pathfinder.findFood(getCoordinate(), foodType));
+            setRouteToFood(pathfinder.findFood(myCoordinate, foodType));
             routeToFood = getRouteToFood();
         }
         int cellCount = Math.min(getSpeed(), routeToFood.size());
         Iterator<Coordinate> iterator = routeToFood.iterator();
-        System.out.printf("%s %s", "Predator: ", getCoordinate());
+        System.out.printf("%s %s", "Predator: ", myCoordinate);
 
         for (int i = 0; i < cellCount; i++) {
             Coordinate coordinate = iterator.next();
             Optional<Entity> cell = worldMap.getEntityFromCell(coordinate);
-            if (cell.isEmpty()) {
-                worldMap.removeEntityAt(getCoordinate());
-                setCoordinate(coordinate);
-                worldMap.putEntity(this, getCoordinate());
-                iterator.remove();
-
-            } else {
-                if (foodType.test(cell.get())) {
+            if (cell.isEmpty() || foodType.test(cell.get())) {
+                if (cell.isPresent()) {
                     Herbivore creature = (Herbivore) cell.get();
                     attack(creature);
                     if (creature.isAlive()) {
                         break;
-                    } else {
-                        worldMap.removeEntityAt(getCoordinate());
-                        setCoordinate(coordinate);
-                        worldMap.updateEntity(this, coordinate);
-                        iterator.remove();
                     }
-                } else {
-                    break;
+                    worldMap.removeEntityAt(coordinate);
                 }
+                worldMap.removeEntityAt(myCoordinate);
+                worldMap.putEntity(this, coordinate);
+                myCoordinate = worldMap.getEntityCoordinate(this);
+                iterator.remove();
+            } else {
+                break;
             }
         }
-        System.out.printf(" %s\n", getCoordinate());
+        System.out.printf(" %s\n", worldMap.getEntityCoordinate(this));
     }
 }

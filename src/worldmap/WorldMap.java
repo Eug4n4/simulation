@@ -5,6 +5,7 @@ import entity.Creature;
 import entity.Entity;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,14 +33,11 @@ public class WorldMap {
     }
 
     public void putEntity(Entity entity, Coordinate coordinate) {
-        if (isEmptyCell(coordinate)) {
+        if (isEmptyCell(coordinate) && isInMapRange(coordinate)) {
             occupiedCells.put(coordinate, entity);
+        } else {
+            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate x = %d y = %d", coordinate.getX(), coordinate.getY()));
         }
-    }
-
-    public void updateEntity(Entity entity, Coordinate coordinate) {
-        occupiedCells.put(coordinate, entity);
-
     }
 
     public void removeEntityAt(Coordinate coordinate) {
@@ -57,12 +55,12 @@ public class WorldMap {
                         new Coordinate(row + 1, column),
                         new Coordinate(row + 1, column - 1),
                         new Coordinate(row, column - 1)
-                ).filter(coord -> coord.getX() > -1 && coord.getX() < width && coord.getY() > -1 && coord.getY() < height)
+                ).filter(this::isInMapRange)
                 .collect(Collectors.toList());
 
     }
 
-    public final Optional<Entity> getEntityFromCell(Coordinate coordinate) {
+    public Optional<Entity> getEntityFromCell(Coordinate coordinate) {
 
         if (!isEmptyCell(coordinate)) {
             return Optional.of(occupiedCells.get(coordinate));
@@ -70,18 +68,22 @@ public class WorldMap {
         return Optional.empty();
     }
 
-    public Optional<Coordinate> getEntityCoordinate(Entity entity) {
+    public Coordinate getEntityCoordinate(Entity entity) {
         return occupiedCells.keySet()
                 .stream()
                 .filter(coordinate -> occupiedCells.get(coordinate).equals(entity))
-                .findFirst();
+                .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
-    public List<Creature> getCreatures() {
+    public List<Entity> getOfType(Predicate<Entity> entityType) {
         return occupiedCells.values()
                 .stream()
-                .filter(e -> e instanceof Creature)
-                .collect(ArrayList::new, (list, entity) -> list.add((Creature)entity), List::addAll);
+                .filter(entityType)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isInMapRange(Coordinate coordinate) {
+        return (coordinate.getX() > -1 && coordinate.getX() < height) && (coordinate.getY() > -1 && coordinate.getY() < width);
     }
 
 
