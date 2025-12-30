@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 
 public class Predator extends Creature {
     private final int force;
-
     public Predator(int speed, int health, int force) {
         super(speed, health);
         this.force = force;
@@ -22,13 +21,9 @@ public class Predator extends Creature {
 
     @Override
     public void makeMove(Pathfinder pathfinder, WorldMap worldMap) {
-        List<Coordinate> routeToFood = getRouteToFood();
         Predicate<Entity> foodType = e -> e instanceof Herbivore;
         Coordinate myCoordinate = worldMap.getEntityCoordinate(this);
-        if (routeToFood == null || routeToFood.isEmpty()) {
-            setRouteToFood(pathfinder.findFood(myCoordinate, foodType));
-            routeToFood = getRouteToFood();
-        }
+        List<Coordinate> routeToFood = pathfinder.findFood(myCoordinate, foodType);
         int cellCount = Math.min(getSpeed(), routeToFood.size());
         Iterator<Coordinate> iterator = routeToFood.iterator();
         System.out.printf("%s %s", "Predator: ", myCoordinate);
@@ -46,13 +41,14 @@ public class Predator extends Creature {
                     worldMap.removeEntityAt(coordinate);
                 }
                 worldMap.removeEntityAt(myCoordinate);
+                System.out.printf(" %s %s\n", "Predator: ", coordinate);
                 worldMap.putEntity(this, coordinate);
-                myCoordinate = worldMap.getEntityCoordinate(this);
+                myCoordinate = coordinate;
                 iterator.remove();
             } else {
                 break;
             }
         }
-        System.out.printf(" %s\n", worldMap.getEntityCoordinate(this));
+
     }
 }

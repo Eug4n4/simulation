@@ -1,36 +1,32 @@
 import action.Action;
-import entity.*;
 import worldmap.WorldMapRenderer;
 
 import java.util.List;
 
 public class Simulation {
     private final List<Action> turnActions;
-//    private final WorldMap worldMap;
     private final WorldMapRenderer mapRenderer;
-    private final EntityCounter entityCounter;
-//    private final Pathfinder pathfinder;
+    private long turnCount = 0;
 
     public Simulation(WorldMapRenderer renderer, List<Action> initActions, List<Action> turnActions) {
-//        this.worldMap = worldMap;
-//        this.pathfinder = pathfinder;
         this.turnActions = turnActions;
         mapRenderer = renderer;
-        entityCounter = new EntityCounter(5, 5, 3, 5);
         executeActions(initActions);
     }
 
 
 
     private void nextTurn() {
-        System.out.println();
+        System.out.printf("Turn %d:\n", turnCount);
         executeActions(turnActions);
         mapRenderer.printMap();
     }
 
     public void start() {
+        System.out.println("Initial map:");
         mapRenderer.printMap();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
+            turnCount++;
             nextTurn();
         }
 

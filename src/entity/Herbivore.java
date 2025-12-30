@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class Herbivore extends Creature {
+public class Herbivore extends Creature implements Cloneable {
     public Herbivore(int speed, int health) {
         super(speed, health);
     }
@@ -22,12 +22,8 @@ public class Herbivore extends Creature {
             return;
         }
         Coordinate myCoordinate = worldMap.getEntityCoordinate(this);
-        List<Coordinate> routeToFood = getRouteToFood();
         Predicate<Entity> foodType = e -> e instanceof Grass;
-        if (routeToFood == null || routeToFood.isEmpty()) {
-            setRouteToFood(pathfinder.findFood(myCoordinate, foodType));
-            routeToFood = getRouteToFood();
-        }
+        List<Coordinate> routeToFood = pathfinder.findFood(myCoordinate, foodType);
         int cellCount = Math.min(getSpeed(), routeToFood.size());
         Iterator<Coordinate> iterator = routeToFood.iterator();
         System.out.printf("%s %s", "Herbivore: ", myCoordinate);
@@ -35,13 +31,26 @@ public class Herbivore extends Creature {
             Coordinate coordinate = iterator.next();
             Optional<Entity> cell = worldMap.getEntityFromCell(coordinate);
             if (cell.isEmpty() || foodType.test(cell.get())) {
+                if (cell.isPresent()) {
+                    worldMap.removeEntityAt(coordinate);
+                }
                 worldMap.removeEntityAt(myCoordinate);
+                System.out.printf(" %s %s\n", "Herbivore: ", coordinate);
                 worldMap.putEntity(this, coordinate);
+                myCoordinate = coordinate;
                 iterator.remove();
             }
 
         }
-        System.out.printf(" %s\n", worldMap.getEntityCoordinate(this));
+
     }
 
+    @Override
+    public Herbivore clone() {
+        try {
+            return (Herbivore) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

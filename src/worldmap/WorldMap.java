@@ -1,11 +1,11 @@
 package worldmap;
 
 import entity.Coordinate;
-import entity.Creature;
 import entity.Entity;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -73,6 +73,24 @@ public class WorldMap {
                 .stream()
                 .filter(coordinate -> occupiedCells.get(coordinate).equals(entity))
                 .findFirst().orElseThrow(IllegalArgumentException::new);
+    }
+
+    public Supplier<Coordinate> getRandomEmptyCoordinate() {
+        Random random = new Random();
+        List<Coordinate> reserved = new ArrayList<>();
+
+        return () -> {
+            Coordinate coordinate;
+            do {
+                coordinate = new Coordinate(random.nextInt(getHeight()), random.nextInt(getWidth()));
+            } while (!isEmptyCell(coordinate) || reserved.contains(coordinate));
+            reserved.add(coordinate);
+            return coordinate;
+        };
+    }
+
+    public long countOfType(Class<? extends Entity> klass) {
+        return occupiedCells.values().stream().filter(e -> e.getClass() == klass).count();
     }
 
     public List<Entity> getOfType(Predicate<Entity> entityType) {
