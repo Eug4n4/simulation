@@ -4,8 +4,8 @@ import action.SpawnEntityAction;
 import dialog.Dialog;
 import dialog.ScannerIntegerConsoleDialog;
 import entity.*;
+import validator.MinMaxValidator;
 import validator.Validator;
-import validator.WorldMapDimensionValidator;
 import worldmap.Pathfinder;
 import worldmap.WorldMap;
 import worldmap.WorldMapRenderer;
@@ -53,7 +53,7 @@ public class Main {
     }
 
     private static WorldMap getWorldMap() {
-        Validator<Integer> dimensionValidator = new WorldMapDimensionValidator("Error! Map can't be smaller than 10x10 and bigger than 100x100");
+        Validator<Integer> dimensionValidator = new MinMaxValidator(10, 100,"Map can't be smaller than 10x10 and bigger than 100x100");
         Dialog<Integer> mapWidth = new ScannerIntegerConsoleDialog("Enter map width:", "Width must be integer", dimensionValidator);
         Dialog<Integer> mapHeight = new ScannerIntegerConsoleDialog("Enter map height:", "Height must be integer", dimensionValidator);
         int width = mapWidth.input();
