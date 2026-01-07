@@ -6,8 +6,6 @@ import worldmap.WorldMap;
 abstract public class Creature extends Entity {
     private final int speed;
     private int health;
-//    private List<Coordinate> routeToFood;
-
 
     public Creature(int speed, int health) {
         this.speed = speed;
@@ -15,14 +13,6 @@ abstract public class Creature extends Entity {
     }
 
     public abstract void makeMove(Pathfinder pathfinder, WorldMap worldMap);
-
-//    public List<Coordinate> getRouteToFood() {
-//        return routeToFood;
-//    }
-
-//    public void setRouteToFood(List<Coordinate> routeToFood) {
-//        this.routeToFood = routeToFood;
-//    }
 
     public int getSpeed() {
         return speed;

@@ -5,7 +5,6 @@ import entity.Entity;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,7 +35,7 @@ public class WorldMap {
         if (isEmptyCell(coordinate) && isInMapRange(coordinate)) {
             occupiedCells.put(coordinate, entity);
         } else {
-            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate row = %d column = %d", coordinate.row(), coordinate.column()));
+            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate %s", coordinate));
         }
     }
 
@@ -75,18 +74,13 @@ public class WorldMap {
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
-    public Supplier<Coordinate> getRandomEmptyCoordinate() {
+    public Coordinate getRandomEmptyCoordinate() {
         Random random = new Random();
-        List<Coordinate> reserved = new ArrayList<>();
-
-        return () -> {
-            Coordinate coordinate;
-            do {
-                coordinate = new Coordinate(random.nextInt(getHeight()), random.nextInt(getWidth()));
-            } while (!isEmptyCell(coordinate) || reserved.contains(coordinate));
-            reserved.add(coordinate);
-            return coordinate;
-        };
+        Coordinate coordinate;
+        do {
+            coordinate = new Coordinate(random.nextInt(getHeight()), random.nextInt(getWidth()));
+        } while (!isEmptyCell(coordinate));
+        return coordinate;
     }
 
     public long countOfType(Class<? extends Entity> klass) {

@@ -26,7 +26,6 @@ public class Herbivore extends Creature implements Cloneable {
         List<Coordinate> routeToFood = pathfinder.findFood(myCoordinate, foodType);
         int cellCount = Math.min(getSpeed(), routeToFood.size());
         Iterator<Coordinate> iterator = routeToFood.iterator();
-        System.out.printf("%s %s", "Herbivore: ", myCoordinate);
         for (int i = 0; i < cellCount; i++) {
             Coordinate coordinate = iterator.next();
             Optional<Entity> cell = worldMap.getEntityFromCell(coordinate);
@@ -35,7 +34,6 @@ public class Herbivore extends Creature implements Cloneable {
                     worldMap.removeEntityAt(coordinate);
                 }
                 worldMap.removeEntityAt(myCoordinate);
-                System.out.printf(" %s %s\n", "Herbivore: ", coordinate);
                 worldMap.putEntity(this, coordinate);
                 myCoordinate = coordinate;
                 iterator.remove();

@@ -26,7 +26,6 @@ public class Predator extends Creature {
         List<Coordinate> routeToFood = pathfinder.findFood(myCoordinate, foodType);
         int cellCount = Math.min(getSpeed(), routeToFood.size());
         Iterator<Coordinate> iterator = routeToFood.iterator();
-        System.out.printf("%s %s", "Predator: ", myCoordinate);
 
         for (int i = 0; i < cellCount; i++) {
             Coordinate coordinate = iterator.next();
@@ -41,7 +40,6 @@ public class Predator extends Creature {
                     worldMap.removeEntityAt(coordinate);
                 }
                 worldMap.removeEntityAt(myCoordinate);
-                System.out.printf(" %s %s\n", "Predator: ", coordinate);
                 worldMap.putEntity(this, coordinate);
                 myCoordinate = coordinate;
                 iterator.remove();

@@ -71,24 +71,25 @@ public class Simulation {
 
         @Override
         public void run() {
-            int option;
-            try {
-                do {
+            int option = -1;
+
+            while (option != 4) {
+                try {
                     option = input.input();
-                    if (option == 2) {
+                } catch (IllegalArgumentException e) {
+                    System.err.println(e.getMessage());
+                }
+                if (option == 2) {
+                    pauseSimulation();
+                } else if ((!isRunning && (option == 1 || option == 3)) || option == 4) {
+                    if (option == 4) {
                         pauseSimulation();
-                    } else if ((!isRunning && (option == 1 || option == 3)) || option == 4) {
-                        if (option == 4) {
-                            pauseSimulation();
-                        }
-                        options.add(option);
                     }
+                    options.add(option);
+                }
 
-                } while (option != 4);
-
-            } catch (IllegalArgumentException e) {
-                System.err.println(e.getMessage());
             }
+
 
         }
     }

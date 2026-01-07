@@ -1,7 +1,7 @@
 package entity;
 
 public enum Sprite {
-    CELL(127999),
+    CELL(11035),
     PREDATOR(129409),
     HERBIVORE(129427),
     GRASS(127808),

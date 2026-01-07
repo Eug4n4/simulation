@@ -3,8 +3,6 @@ package action;
 import entity.*;
 import worldmap.WorldMap;
 
-import java.util.function.Supplier;
-
 public class SpawnEntityAction implements Action {
     private Entity entity;
     private final int initialHealth;
@@ -19,22 +17,26 @@ public class SpawnEntityAction implements Action {
 
     @Override
     public void execute() {
-        Supplier<Coordinate> randomCoordinate = worldMap.getRandomEmptyCoordinate();
+        Coordinate random = worldMap.getRandomEmptyCoordinate();
         if (counter != null) {
             long herbivores = worldMap.countOfType(Herbivore.class);
             long grasses = worldMap.countOfType(Grass.class);
-            if (herbivores == counter.getMaxHerbivores() && grasses == counter.getMaxFood()) {
-                return;
-            }
-            if (entity instanceof Herbivore h && herbivores < counter.getMaxHerbivores()) {
-                h.setHealth(initialHealth);
-                entity = h.clone();
-            } else if (entity instanceof Grass && grasses == counter.getMaxFood()) {
+
+            if (entity instanceof Grass && grasses == counter.maxFood()) {
                 return;
             }
 
+            if (entity instanceof Herbivore h) {
+                if (herbivores == counter.maxHerbivores()) {
+                    return;
+                } else if (herbivores < counter.maxHerbivores()) {
+                    h.setHealth(initialHealth);
+                    entity = h.clone();
+                }
+            }
+
         }
-        worldMap.putEntity(entity, randomCoordinate.get());
+        worldMap.putEntity(entity, random);
 
     }
 

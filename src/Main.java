@@ -14,33 +14,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
+    private static final int MAX_HERBIVORES = 5;
+    private static final int MAX_PREDATORS = 5;
+    private static final int MAX_FOOD = 5;
+    private static final int MAX_OBSTACLES = 5;
+    private static final int HERBIVORE_SPEED = 2;
+    private static final int HERBIVORE_HEALTH = 2;
+    private static final int PREDATOR_SPEED = 1;
+    private static final int PREDATOR_HEALTH = 2;
+    private static final int PREDATOR_FORCE = 2;
+    private static final int MIN_WORLD_DIMENSION = 10;
+    private static final int MAX_WORLD_DIMENSION = 50;
 
     public static void main(String[] args) {
         WorldMap worldMap = getWorldMap();
         Pathfinder pathfinder = new Pathfinder(worldMap);
-        EntityCounter counter = new EntityCounter(5, 5, 3, 5);
+        EntityCounter counter = new EntityCounter(MAX_HERBIVORES, MAX_PREDATORS, MAX_FOOD, MAX_OBSTACLES);
         List<Action> initActions = new ArrayList<>();
 
 
-        for (int i = 0; i < counter.getMaxHerbivores(); i++) {
-            initActions.add(new SpawnEntityAction(new Herbivore(2, 2), worldMap));
+        for (int i = 0; i < counter.maxHerbivores(); i++) {
+            initActions.add(new SpawnEntityAction(new Herbivore(HERBIVORE_SPEED, HERBIVORE_HEALTH), worldMap));
         }
-        for (int i = 0; i < counter.getMaxPredators(); i++) {
-            initActions.add(new SpawnEntityAction(new Predator(1, 2, 3), worldMap));
+        for (int i = 0; i < counter.maxPredators(); i++) {
+            initActions.add(new SpawnEntityAction(new Predator(PREDATOR_SPEED, PREDATOR_HEALTH, PREDATOR_FORCE), worldMap));
 
         }
-        for (int i = 0; i < counter.getMaxFood(); i++) {
+        for (int i = 0; i < counter.maxFood(); i++) {
             initActions.add(new SpawnEntityAction(new Grass(), worldMap));
         }
-        for (int i = 0; i < counter.getMaxObstacles(); i++) {
+        for (int i = 0; i < counter.maxObstacles(); i++) {
             initActions.add(new SpawnEntityAction(new Palm(), worldMap));
         }
 
         List<Action> turnActions = List.of(
                 new MoveEntityAction(worldMap, pathfinder),
                 new SpawnEntityAction(new Grass(), worldMap),
-                new SpawnEntityAction(new Herbivore(2, 2), worldMap)
+                new SpawnEntityAction(new Herbivore(HERBIVORE_SPEED, HERBIVORE_HEALTH), worldMap)
         );
         turnActions.forEach(a -> {
             if (a instanceof SpawnEntityAction spawn) {
@@ -53,7 +63,7 @@ public class Main {
     }
 
     private static WorldMap getWorldMap() {
-        Validator<Integer> dimensionValidator = new MinMaxValidator(10, 100,"Map can't be smaller than 10x10 and bigger than 100x100");
+        Validator<Integer> dimensionValidator = new MinMaxValidator(MIN_WORLD_DIMENSION, MAX_WORLD_DIMENSION, String.format("Map can't be smaller than %dx%d and bigger than %dx%d", MIN_WORLD_DIMENSION, MIN_WORLD_DIMENSION, MAX_WORLD_DIMENSION, MAX_WORLD_DIMENSION));
         Dialog<Integer> mapWidth = new ScannerIntegerConsoleDialog("Enter map width:", "Width must be integer", dimensionValidator);
         Dialog<Integer> mapHeight = new ScannerIntegerConsoleDialog("Enter map height:", "Height must be integer", dimensionValidator);
         int width = mapWidth.input();
