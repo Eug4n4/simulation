@@ -34,23 +34,23 @@ public class Main {
 
 
         for (int i = 0; i < counter.maxHerbivores(); i++) {
-            initActions.add(new SpawnEntityAction(new Herbivore(HERBIVORE_SPEED, HERBIVORE_HEALTH), worldMap));
+            initActions.add(new SpawnEntityAction(() -> new Herbivore(HERBIVORE_SPEED, HERBIVORE_HEALTH), worldMap));
         }
         for (int i = 0; i < counter.maxPredators(); i++) {
-            initActions.add(new SpawnEntityAction(new Predator(PREDATOR_SPEED, PREDATOR_HEALTH, PREDATOR_FORCE), worldMap));
+            initActions.add(new SpawnEntityAction(() -> new Predator(PREDATOR_SPEED, PREDATOR_HEALTH, PREDATOR_FORCE), worldMap));
 
         }
         for (int i = 0; i < counter.maxFood(); i++) {
-            initActions.add(new SpawnEntityAction(new Grass(), worldMap));
+            initActions.add(new SpawnEntityAction(Grass::new, worldMap));
         }
         for (int i = 0; i < counter.maxObstacles(); i++) {
-            initActions.add(new SpawnEntityAction(new Palm(), worldMap));
+            initActions.add(new SpawnEntityAction(Palm::new, worldMap));
         }
 
         List<Action> turnActions = List.of(
                 new MoveEntityAction(worldMap, pathfinder),
-                new SpawnEntityAction(new Grass(), worldMap),
-                new SpawnEntityAction(new Herbivore(HERBIVORE_SPEED, HERBIVORE_HEALTH), worldMap)
+                new SpawnEntityAction(Grass::new, worldMap),
+                new SpawnEntityAction(() -> new Herbivore(HERBIVORE_SPEED, HERBIVORE_HEALTH), worldMap)
         );
         turnActions.forEach(a -> {
             if (a instanceof SpawnEntityAction spawn) {

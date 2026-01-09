@@ -1,11 +1,6 @@
 package entity;
 
-import worldmap.Pathfinder;
 import worldmap.WorldMap;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
 
 public class Predator extends Creature {
     private final int force;
@@ -24,33 +19,17 @@ public class Predator extends Creature {
     }
 
     @Override
-    public void makeMove(Pathfinder pathfinder, WorldMap worldMap) {
-        var foodType = getPossibleFood();
-        Coordinate myCoordinate = worldMap.getEntityCoordinate(this);
-        List<Coordinate> routeToFood = pathfinder.findFood(myCoordinate, foodType);
-        int cellCount = Math.min(getSpeed(), routeToFood.size());
-        Iterator<Coordinate> iterator = routeToFood.iterator();
-
-        for (int i = 0; i < cellCount; i++) {
-            Coordinate coordinate = iterator.next();
-            Optional<Entity> cell = worldMap.getEntityFromCell(coordinate);
-            if (cell.isEmpty() || foodType.isInstance(cell.get())) {
-                if (cell.isPresent()) {
-                    Herbivore creature = (Herbivore) cell.get();
-                    attack(creature);
-                    if (creature.isAlive()) {
-                        break;
-                    }
-                    worldMap.removeEntityAt(coordinate);
-                }
-                worldMap.removeEntityAt(myCoordinate);
-                worldMap.putEntity(this, coordinate);
-                myCoordinate = coordinate;
-                iterator.remove();
-            } else {
-                break;
-            }
-        }
-
+    protected boolean shouldStopAfterInteractionWith(Entity entity) {
+        return ((Creature)entity).isAlive();
     }
+
+    @Override
+    protected void interactWith(Entity entity, WorldMap worldMap) {
+        Herbivore herbivore = (Herbivore) entity;
+        attack(herbivore);
+        if (!herbivore.isAlive()) {
+            worldMap.removeEntityAt(worldMap.getEntityCoordinate(herbivore));
+        }
+    }
+
 }
