@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    private static final int MAX_HERBIVORES = 5;
-    private static final int MAX_PREDATORS = 5;
-    private static final int MAX_FOOD = 5;
-    private static final int MAX_OBSTACLES = 5;
     private static final int HERBIVORE_SPEED = 2;
     private static final int HERBIVORE_HEALTH = 2;
     private static final int PREDATOR_SPEED = 1;
@@ -28,8 +24,12 @@ public class Main {
 
     public static void main(String[] args) {
         WorldMap worldMap = getWorldMap();
+        int maxHerbivores = Math.max(worldMap.getWidth(), worldMap.getHeight()) / 2;
+        int maxPredators = maxHerbivores + 1;
+        int maxFood = maxHerbivores - 1;
+        int maxObstacles = maxHerbivores * 2;
         Pathfinder pathfinder = new Pathfinder(worldMap);
-        EntityCounter counter = new EntityCounter(MAX_HERBIVORES, MAX_PREDATORS, MAX_FOOD, MAX_OBSTACLES);
+        EntityCounter counter = new EntityCounter(maxHerbivores, maxPredators, maxFood, maxObstacles);
         List<Action> initActions = new ArrayList<>();
 
 
