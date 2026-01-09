@@ -19,8 +19,8 @@ public class SpawnEntityAction implements Action {
     public void execute() {
         Coordinate random = worldMap.getRandomEmptyCoordinate();
         if (counter != null) {
-            long herbivores = worldMap.countOfType(Herbivore.class);
-            long grasses = worldMap.countOfType(Grass.class);
+            long herbivores = worldMap.countOfType(e -> e instanceof Herbivore);
+            long grasses = worldMap.countOfType(e -> e instanceof Grass);
 
             if (entity instanceof Grass && grasses == counter.maxFood()) {
                 return;

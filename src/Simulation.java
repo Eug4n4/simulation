@@ -11,9 +11,13 @@ import java.util.concurrent.BlockingQueue;
 public class Simulation {
     private final List<Action> turnActions;
     private final WorldMapRenderer mapRenderer;
+    private final BlockingQueue<Integer> options = new ArrayBlockingQueue<>(1);
     private long turnCount = 0;
     private boolean isRunning = false;
-    private final BlockingQueue<Integer> options = new ArrayBlockingQueue<>(1);
+    private final int OPTION_START_ENDLESS_SIMULATION = 1;
+    private final int OPTION_PAUSE_ENDLESS_SIMULATION = 2;
+    private final int OPTION_SIMULATE_SINGLE_TURN = 3;
+    private final int OPTION_QUIT = 4;
 
     public Simulation(WorldMapRenderer renderer, List<Action> initActions, List<Action> turnActions) {
         this.turnActions = turnActions;
@@ -24,11 +28,18 @@ public class Simulation {
     public void start() {
         System.out.println("Initial map:");
         mapRenderer.printMap();
-        Dialog<Integer> input = new ScannerIntegerConsoleDialog("""
-                1 - Start endless simulation
-                2 - Pause endless simulation
-                3 - Simulate single turn
-                4 - Quit""", "Invalid option", new MinMaxValidator(1, 4, "Invalid option"));
+        Dialog<Integer> input = new ScannerIntegerConsoleDialog(
+                String.format("""
+                                %d - Start endless simulation
+                                %d - Pause endless simulation
+                                %d - Simulate single turn
+                                %d - Quit""",
+                        OPTION_START_ENDLESS_SIMULATION,
+                        OPTION_PAUSE_ENDLESS_SIMULATION,
+                        OPTION_SIMULATE_SINGLE_TURN,
+                        OPTION_QUIT),
+                "Invalid option",
+                new MinMaxValidator(OPTION_START_ENDLESS_SIMULATION, OPTION_QUIT, "Invalid option"));
         Thread inputListener = new Thread(new InputListener(input));
         Thread runner = new Thread(new Runner());
         runner.setName("Runner");
@@ -73,16 +84,17 @@ public class Simulation {
         public void run() {
             int option = -1;
 
-            while (option != 4) {
+            while (option != OPTION_QUIT) {
                 try {
                     option = input.input();
                 } catch (IllegalArgumentException e) {
                     System.err.println(e.getMessage());
+                    continue;
                 }
-                if (option == 2) {
+                if (option == OPTION_PAUSE_ENDLESS_SIMULATION) {
                     pauseSimulation();
-                } else if ((!isRunning && (option == 1 || option == 3)) || option == 4) {
-                    if (option == 4) {
+                } else if ((!isRunning && (option == OPTION_START_ENDLESS_SIMULATION || option == OPTION_SIMULATE_SINGLE_TURN)) || option == OPTION_QUIT) {
+                    if (option == OPTION_QUIT) {
                         pauseSimulation();
                     }
                     options.add(option);
@@ -99,12 +111,12 @@ public class Simulation {
         public void run() {
 
             int option = -1;
-            while (option != 4) {
+            while (option != OPTION_QUIT) {
                 try {
                     option = options.take();
-                    if (option == 1) {
+                    if (option == OPTION_START_ENDLESS_SIMULATION) {
                         startSimulation();
-                    } else if (option == 3) {
+                    } else if (option == OPTION_SIMULATE_SINGLE_TURN) {
                         nextTurn();
                     }
                 } catch (InterruptedException e) {

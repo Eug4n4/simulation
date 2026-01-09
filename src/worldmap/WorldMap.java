@@ -26,21 +26,28 @@ public class WorldMap {
         return height;
     }
 
+    public Optional<Entity> getEntityFromCell(Coordinate coordinate) {
 
-    public boolean isEmptyCell(Coordinate coordinate) {
-        return !occupiedCells.containsKey(coordinate);
-    }
-
-    public void putEntity(Entity entity, Coordinate coordinate) {
-        if (isEmptyCell(coordinate) && isInMapRange(coordinate)) {
-            occupiedCells.put(coordinate, entity);
-        } else {
-            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate %s", coordinate));
+        if (!isEmptyCell(coordinate)) {
+            return Optional.of(occupiedCells.get(coordinate));
         }
+        return Optional.empty();
     }
 
-    public void removeEntityAt(Coordinate coordinate) {
-        occupiedCells.remove(coordinate);
+    public Coordinate getEntityCoordinate(Entity entity) {
+        return occupiedCells.keySet()
+                .stream()
+                .filter(coordinate -> occupiedCells.get(coordinate) == entity)
+                .findFirst().orElseThrow(IllegalArgumentException::new);
+    }
+
+    public Coordinate getRandomEmptyCoordinate() {
+        Random random = new Random();
+        Coordinate coordinate;
+        do {
+            coordinate = new Coordinate(random.nextInt(getHeight()), random.nextInt(getWidth()));
+        } while (!isEmptyCell(coordinate));
+        return coordinate;
     }
 
     public List<Coordinate> getAdjacentCoordinates(Coordinate coordinate) {
@@ -59,39 +66,31 @@ public class WorldMap {
 
     }
 
-    public Optional<Entity> getEntityFromCell(Coordinate coordinate) {
-
-        if (!isEmptyCell(coordinate)) {
-            return Optional.of(occupiedCells.get(coordinate));
-        }
-        return Optional.empty();
-    }
-
-    public Coordinate getEntityCoordinate(Entity entity) {
-        return occupiedCells.keySet()
-                .stream()
-                .filter(coordinate -> occupiedCells.get(coordinate).equals(entity))
-                .findFirst().orElseThrow(IllegalArgumentException::new);
-    }
-
-    public Coordinate getRandomEmptyCoordinate() {
-        Random random = new Random();
-        Coordinate coordinate;
-        do {
-            coordinate = new Coordinate(random.nextInt(getHeight()), random.nextInt(getWidth()));
-        } while (!isEmptyCell(coordinate));
-        return coordinate;
-    }
-
-    public long countOfType(Class<? extends Entity> klass) {
-        return occupiedCells.values().stream().filter(e -> e.getClass() == klass).count();
-    }
-
     public List<Entity> getOfType(Predicate<Entity> entityType) {
         return occupiedCells.values()
                 .stream()
                 .filter(entityType)
                 .collect(Collectors.toList());
+    }
+
+    public long countOfType(Predicate<Entity> entityType) {
+        return occupiedCells.values().stream().filter(entityType).count();
+    }
+
+    public void putEntity(Entity entity, Coordinate coordinate) {
+        if (isEmptyCell(coordinate) && isInMapRange(coordinate)) {
+            occupiedCells.put(coordinate, entity);
+        } else {
+            throw new IllegalArgumentException(String.format("Cannot put entity on coordinate %s", coordinate));
+        }
+    }
+
+    public void removeEntityAt(Coordinate coordinate) {
+        occupiedCells.remove(coordinate);
+    }
+
+    public boolean isEmptyCell(Coordinate coordinate) {
+        return !occupiedCells.containsKey(coordinate);
     }
 
     private boolean isInMapRange(Coordinate coordinate) {

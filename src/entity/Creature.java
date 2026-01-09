@@ -12,6 +12,7 @@ abstract public class Creature extends Entity {
         this.health = health;
     }
 
+    public abstract Class<? extends Eatable> getPossibleFood();
     public abstract void makeMove(Pathfinder pathfinder, WorldMap worldMap);
 
     public int getSpeed() {

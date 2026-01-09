@@ -1,5 +1,5 @@
 package entity;
 
-public class Grass extends Entity {
+public class Grass extends Entity implements Eatable {
 
 }
