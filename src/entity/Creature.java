@@ -30,13 +30,9 @@ abstract public class Creature extends Entity {
         Coordinate myCoordinate = worldMap.getEntityCoordinate(this);
         List<Coordinate> routeToFood = pathfinder.findFood(myCoordinate, foodType);
         int cellCount = Math.min(getSpeed(), routeToFood.size());
-        move(routeToFood.iterator(), cellCount, worldMap);
-    }
-
-    protected void move(Iterator<Coordinate> route, int cellCount, WorldMap worldMap) {
-        Coordinate myCoordinate = worldMap.getEntityCoordinate(this);
+        Iterator<Coordinate> iterator = routeToFood.iterator();
         for (int i = 0; i < cellCount; i++) {
-            Coordinate coordinate = route.next();
+            Coordinate coordinate = iterator.next();
             Optional<Entity> cell = worldMap.getEntityFromCell(coordinate);
             if (cell.isEmpty() || getPossibleFood().isInstance(cell.get())) {
                 if (cell.isPresent()) {
@@ -48,12 +44,13 @@ abstract public class Creature extends Entity {
                 worldMap.removeEntityAt(myCoordinate);
                 worldMap.putEntity(this, coordinate);
                 myCoordinate = coordinate;
-                route.remove();
+                iterator.remove();
             } else {
                 break;
             }
         }
     }
+
 
     public int getSpeed() {
         return speed;
